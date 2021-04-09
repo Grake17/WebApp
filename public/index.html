@@ -1,0 +1,79 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"> 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="style.css">
+<script src="./js/script.js"></script>
+<h2 style="text-align:center">Stadio "La Grande Milano"</h1>
+<h4  style="text-align:center">Prenota ora i tuoi biglietti!</h4>
+<div  class='bckgr'>
+<form  id="user-input" class='formctr' action="#" method="post">
+  <div class="form-group row">
+    <label class="col-4 col-form-label" for="nome">Nome</label> 
+    <div class="col-8">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <div class="input-group-text">
+            <i class="fa fa-angle-double-right"></i>
+          </div>
+        </div> 
+        <input id="nome" name="nome" type="text" class="form-control" value="">
+      </div>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="cognome" class="col-4 col-form-label">Cognome</label> 
+    <div class="col-8">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <div class="input-group-text">
+            <i class="fa fa-angle-double-right"></i>
+          </div>
+        </div> 
+        <input id="cognome" name="cognome" type="text" class="form-control">
+      </div>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="email" class="col-4 col-form-label">Indirizzo E-Mail</label> 
+    <div class="col-8">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <div class="input-group-text">
+            <i class="fa fa-envelope-square"></i>
+          </div>
+        </div> 
+        <input id="email" name="email" type="text" class="form-control">
+      </div>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="select" class="col-4 col-form-label">Posizione</label> 
+    <div class="col-8">
+      <select id="select" name="select" class="custom-select">
+        <option value="Primo Anello">Primo Anello</option>
+        <option value="Secondo Anello">Secondo Anello</option>
+        <option value="Terzo Anello">Terzo Anello</option>
+        <option value="Tribuna">Tribuna</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="tickets" class="col-4 col-form-label">N.Biglietti</label> 
+    <div class="col-8">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <div class="input-group-text">
+            <i class="fa fa-bar-chart"></i>
+          </div>
+        </div> 
+        <input id="tickets" name="tickets" type="text" class="form-control">
+      </div>
+    </div>
+  </div> 
+  <div class="form-group row">
+    <div class="offset-4 col-8">
+      <button id="button-send" name="submit" type="submit" class="btn btn-primary">Invia Richiesta</button>
+      <button id="button-cancel" name="submit" type="submit" class="btn btn-primary">Cancel</button>
+    </div>
+  </div>
+</form>
+</div>

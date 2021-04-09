@@ -1,0 +1,20 @@
+.formctr{
+    margin:150;
+}
+
+.bckgr{
+    
+    background-color:#f55425
+}
+
+body{
+
+    background-image: url("San_Siro_2014.jpg");
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+
+ 
+    
+}
