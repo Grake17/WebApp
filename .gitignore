@@ -1,7 +1,2 @@
 # dependencies
 /node_modules
-/.pnp
-.pnp.js
-
-# TypeScript
-.ts

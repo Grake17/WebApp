@@ -23,7 +23,7 @@ const send = function (ev: any) {
             number: (<HTMLInputElement>document.getElementById("tickets")).value
         };
         const options = {
-            method : "POST",
+            method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
@@ -40,12 +40,12 @@ const send = function (ev: any) {
         window.alert(`Richiesta inviata!\nArriverà una mail a: ${email}`);
     } else {
         window.alert(`Attenzione!\nCompilare tutti i campi.`);
-    }   
+    }
     cancel(ev);
 };
 
 // Cancel Content Function
-const cancel = function(ev: any): void{
+const cancel = function (ev: any): void {
     ev.preventDefault();
     (<HTMLFormElement>document.getElementById("user-input")).reset();
     console.log("Data Reset");
@@ -68,7 +68,7 @@ const validate = function (ev: any) {
     let tickets = validate_type("tickets");         // tickets   
 
     // Validate if values are null
-    check_if_null(name, invalid);                   
+    check_if_null(name, invalid);
     check_if_null(surname, invalid);
     check_if_null(email, invalid);
     check_if_null(tickets, invalid);
