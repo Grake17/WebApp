@@ -1,6 +1,6 @@
 # dependencies
 /node_modules
 
-# Remove .json
-db_data.json
-email_cred.json
+# JSON
+.json
+
