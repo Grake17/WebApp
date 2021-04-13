@@ -27,9 +27,9 @@ db.connect((err) => {
 // Var for result
 var result: string[] = [];
 
-// Set Listening Port
+//Set Listening Port
 app.listen(3000, () => console.log("Listening at 3000"));
-// Set Middleware
+// Set
 app.use(express.static("public"));
 
 // Set limit of response

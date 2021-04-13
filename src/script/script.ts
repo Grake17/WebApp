@@ -1,5 +1,3 @@
-
-
 // Init Function
 const init = function () {
     document.getElementById("button-send").addEventListener("click", send);
