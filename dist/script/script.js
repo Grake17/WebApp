@@ -98,7 +98,7 @@ var check_if_null = function (x, invalid) {
 // Validate mail
 var check_mail = function (x, invalid) {
     // Validate fromat
-    var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    var mailformat = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
     // Check mail 
     if (x == null)
         invalid.push("Value null");

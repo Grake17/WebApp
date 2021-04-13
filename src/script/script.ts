@@ -100,7 +100,7 @@ const check_if_null = function (x: HTMLInputElement | null, invalid: string[]): 
 // Validate mail
 const check_mail = function (x: HTMLInputElement | null, invalid: string[]): void {
     // Validate fromat
-    var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    const mailformat = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
     // Check mail 
     if (x == null)
         invalid.push("Value null");
