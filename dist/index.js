@@ -27,13 +27,13 @@ var express = require("express");
 var app = express();
 // Import DB
 var mysql = __importStar(require("mysql"));
-var _a = require('../db_data.json'), host = _a.host, database = _a.database, username = _a.username, password = _a.password, server_name = _a.server_name;
+var db_data_json_1 = require("./db_data.json");
 // Create connection
 var db = mysql.createConnection({
-    host: host,
-    database: database,
-    user: username,
-    password: password
+    host: db_data_json_1.host,
+    database: db_data_json_1.database,
+    user: db_data_json_1.username,
+    password: db_data_json_1.password
 });
 // Connect
 db.connect(function (err) {
@@ -67,8 +67,11 @@ var savedb = function (data) {
     var date = new Date();
     var date_reg = date.getFullYear() + "|" + date.getMonth() + "|" + date.getDay() + "-" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
     // Query
-    var sql = "INSERT INTO tickets.tickets (nome, cognome, email, posizione, biglietti, server_name, processed, regAt)\n               VALUES ('" + data.name + "', '" + data.surname + "', '" + data.email + "', '" + data.selection + "', '" + data.number + "', '" + server_name + "', '" + 0 + "', '" + date_reg + "');";
-    // let sql = "SELECT * FROM tickets"
+    var sql = "INSERT INTO tickets.tickets (nome, cognome, email, posizione, biglietti, server_name, processed, regAt)\n               VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+    // Data Query
+    var insert = [data.name, data.surname, data.email, data.selection, data.number, db_data_json_1.server_name, 0, date_reg];
+    // Format Query
+    sql = mysql.format(sql, insert);
     // Send Query
     db.query(sql, function (err, rows, fields) {
         if (!err)

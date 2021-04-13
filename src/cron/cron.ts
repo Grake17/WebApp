@@ -7,7 +7,7 @@ import { CronJob } from "cron";
 
 // Import Email Date
 import * as nodemailer from "nodemailer";
-const { host_mail, user_mail, password_mail } = require("../../email_cred.json");
+import { host_mail, user_mail, password_mail } from "../email_cred.json";
 // Set Cred to mail
 const transporter = nodemailer.createTransport({
     host: host_mail,
@@ -19,8 +19,8 @@ const transporter = nodemailer.createTransport({
 
 // Import DB
 import * as mysql from "mysql";
-// Import DB Credential
-const { host, database, username, password } = require('../../db_data.json');
+// Import DB
+import { host, database, username, password } from "../db_data.json";
 
 // Create connection
 const db = mysql.createConnection({
@@ -34,11 +34,15 @@ const db = mysql.createConnection({
 db.connect((err) => {
     // Check Connection Healt
     if (err) console.log(err);
-    else console.log("Connect to DB!");
+    else { 
+        console.log("Connect to DB!");
+        // Start Cron
+        cron.start();
+    };
 });
 
 // CRON Script every 10 minutes
-const cron = new CronJob("*/10 * * * *", async () => {
+const cron = new CronJob("*/1 * * * *", () => {
     // MySQL Query
     let sql = 'SELECT * FROM tickets.tickets WHERE processed = 0;'
     // Set Up Array Fro
@@ -52,50 +56,56 @@ const cron = new CronJob("*/10 * * * *", async () => {
         for (var i of rows) {
             // Trasform RowDataType to String[]
             let data: string[] = Object.values((JSON.parse(JSON.stringify(i))));
-            // Elaborate Function
-            elaborate(data);
-            // Email Function
-            send_mail(data);
+            // Create Promise for mail check
+            const promise: Promise<string> = setup_mail(data);
+            // Promise for check mail
+            promise
+                .then(() => elaborate(data))
+                .catch(n => console.log(n));                             
         }
     });
 })
 
 // Function Update DB
-const elaborate = function (m: string[]) {
+const elaborate = function (m: string[]):void {
     // Get Date
     var date = new Date();
     // Format Date
     let date_proc = `${date.getFullYear()}|${date.getMonth()}|${date.getDay()}-${date.getHours()}:${date.getMinutes()}`;
     // MySQL Query
     let sql = `UPDATE tickets.tickets 
-               SET processed = '${1}', processat = '${date_proc}'
+               SET processed = '1', processat = '${date_proc}'
                WHERE id = '${m[0]}';`
     // Execute Query
-    db.query(sql, function (err) {
+    db.query(sql, (err) => {
         if (!err) console.log("Successfully edit on DB");
         else console.log(err);
     });
 }
 
 // Function Send Mail
-const send_mail = function (m: string[]) {
-    // Set Up Mail Data
-    var mailOptions = {
-        from: user_mail,
-        to: m[3],
-        subject: 'Email di conferma TICKET',
-        text: `Confermiamo con successo che lei ha prenotato\n
-               ${m[5]} biglietti il ${m[7]}`
-    };
-    // Send Mail
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            console.log(error);
-        } else {
-            console.log('Email sent: ' + info.response);
-        }
-    });
+const setup_mail = function (m: string[]): Promise<string> {
+    return new Promise((resolve, rejects) => {
+        // Set Up Mail Data
+        var mailOptions = {
+            from: user_mail,
+            to: m[3],
+            subject: 'Email di conferma TICKET',
+            text: `Confermiamo con successo che lei ha prenotato\n
+                ${m[5]} biglietti il ${m[7]}`
+        };
+        transporter.sendMail(mailOptions, function (error, info) {
+            // If send mail go wrong
+            if (error){
+                console.log(error); 
+                rejects("err");
+            } 
+            // If send mail works           
+            else {
+                console.log('Email sent: ' + info.response);
+                resolve("yes");
+            }                
+        });     
+    });   
 }
 
-// Start Cron
-cron.start();
