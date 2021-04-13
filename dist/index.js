@@ -27,7 +27,7 @@ var express = require("express");
 var app = express();
 // Import DB
 var mysql = __importStar(require("mysql"));
-var _a = require('../db_data.json'), host = _a.host, database = _a.database, username = _a.username, password = _a.password;
+var _a = require('../db_data.json'), host = _a.host, database = _a.database, username = _a.username, password = _a.password, server_name = _a.server_name;
 // Create connection
 var db = mysql.createConnection({
     host: host,
@@ -46,14 +46,19 @@ db.connect(function (err) {
 var result = [];
 //Set Listening Port
 app.listen(3000, function () { return console.log("Listening at 3000"); });
+// Set
 app.use(express.static("public"));
 // Set limit of response
 app.use(express.json({ limit: "1mb" }));
 // Post Capture
 app.post("/api", function (request, response) {
+    // Get Post Data
     var data = (request.body);
+    // Console log for monitoring
     console.log("Request from " + data.email);
+    // Function DB    
     savedb(data);
+    // Send Response
     response.sendStatus(200);
 });
 // Function DB
@@ -62,7 +67,7 @@ var savedb = function (data) {
     var date = new Date();
     var date_reg = date.getFullYear() + "|" + date.getMonth() + "|" + date.getDay() + "-" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
     // Query
-    var sql = "INSERT INTO tickets.tickets (nome, cognome, email, posizione, biglietti, processed, regAt)\n               VALUES ('" + data.name + "', '" + data.surname + "', '" + data.email + "', '" + data.selection + "', '" + data.number + "', '" + 0 + "', '" + date_reg + "');";
+    var sql = "INSERT INTO tickets.tickets (nome, cognome, email, posizione, biglietti, server_name, processed, regAt)\n               VALUES ('" + data.name + "', '" + data.surname + "', '" + data.email + "', '" + data.selection + "', '" + data.number + "', '" + server_name + "', '" + 0 + "', '" + date_reg + "');";
     // let sql = "SELECT * FROM tickets"
     // Send Query
     db.query(sql, function (err, rows, fields) {

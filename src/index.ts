@@ -8,7 +8,7 @@ const app = express();
 
 // Import DB
 import * as mysql from "mysql";
-const { host, database, username, password } = require('../db_data.json');
+const { host, database, username, password, server_name } = require('../db_data.json');
 
 // Create connection
 const db = mysql.createConnection({
@@ -53,8 +53,8 @@ const savedb = function (data: any): void {
     var date = new Date();
     let date_reg = `${date.getFullYear()}|${date.getMonth()}|${date.getDay()}-${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
     // Query
-    let sql = `INSERT INTO tickets.tickets (nome, cognome, email, posizione, biglietti, processed, regAt)
-               VALUES ('${data.name}', '${data.surname}', '${data.email}', '${data.selection}', '${data.number}', '${0}', '${date_reg}');`
+    let sql = `INSERT INTO tickets.tickets (nome, cognome, email, posizione, biglietti, server_name, processed, regAt)
+               VALUES ('${data.name}', '${data.surname}', '${data.email}', '${data.selection}', '${data.number}', '${server_name}', '${0}', '${date_reg}');`
     // let sql = "SELECT * FROM tickets"
     // Send Query
     db.query(sql, function (err, rows, fields) {
