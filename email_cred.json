@@ -1,5 +1,5 @@
 {
-    "host_mail": "authsmtp.securemail.pro",
-    "user_mail": "ordini@peperone.online",
-    "password_mail": "Ordini456?"
+    "host_mail": "host_mail",
+    "user_mail": "usermail",
+    "password_mail": "password"
 }

@@ -1,6 +1,6 @@
 {
-    "host": "192.168.1.196",
-    "database": "tickets",
-    "username": "db_ticket_user",
-    "password": "Ticket@1234"
+    "host": "insert_ip_db",
+    "database": "insert_database",
+    "username": "insert_user",
+    "password": "insert_password"
 }
