@@ -35,48 +35,57 @@ var db = mysql.createConnection({
     user: db_data_json_1.username,
     password: db_data_json_1.password
 });
+// Var for result
+var result = [];
 // Connect
 db.connect(function (err) {
     if (err)
         console.log(err);
-    else
+    else {
+        // Connessione al DB riuscita!
         console.log("Connect to DB!");
-});
-// Var for result
-var result = [];
-//Set Listening Port
-app.listen(3000, function () { return console.log("Listening at 3000"); });
-// Set
-app.use(express.static("public"));
-// Set limit of response
-app.use(express.json({ limit: "1mb" }));
-// Post Capture
-app.post("/api", function (request, response) {
-    // Get Post Data
-    var data = (request.body);
-    // Console log for monitoring
-    console.log("Request from " + data.email);
-    // Function DB    
-    savedb(data);
-    // Send Response
-    response.sendStatus(200);
+        //Set Listening Port
+        app.listen(3000, function () { return console.log("Listening at 3000"); });
+        // Set
+        app.use(express.static("public"));
+        // Set limit of response
+        app.use(express.json({ limit: "1mb" }));
+        // Post Capture
+        app.post("/api", function (request, response) {
+            // Get Post Data
+            var data = (request.body);
+            // Console log for monitoring
+            console.log("Request from " + data.email);
+            // Function DB    
+            var result = savedb(data);
+            // Send Response
+            result
+                .then(function () { return response.sendStatus(200); }) // Function Resolve
+                .catch(function () { return response.sendStatus(500); }); // Function Reject            
+        });
+    }
 });
 // Function DB
 var savedb = function (data) {
-    // Set Date Data
-    var date = new Date();
-    var date_reg = date.getFullYear() + "|" + date.getMonth() + "|" + date.getDay() + "-" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-    // Query
-    var sql = "INSERT INTO tickets.tickets (nome, cognome, email, posizione, biglietti, server_name, processed, regAt)\n               VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
-    // Data Query
-    var insert = [data.name, data.surname, data.email, data.selection, data.number, db_data_json_1.server_name, 0, date_reg];
-    // Format Query
-    sql = mysql.format(sql, insert);
-    // Send Query
-    db.query(sql, function (err, rows, fields) {
-        if (!err)
-            console.log("succesuflly saved on DB");
-        else
-            console.log(err);
+    return new Promise(function (resolve, rejects) {
+        // Set Date Data
+        var date = new Date();
+        var date_reg = date.getFullYear() + "|" + date.getMonth() + "|" + date.getDay() + "-" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        // Query
+        var sql = "INSERT INTO tickets.tickets (nome, cognome, email, posizione, biglietti, server_name, processed, regAt)\n                VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+        // Data Query
+        var insert = [data.name, data.surname, data.email, data.selection, data.number, db_data_json_1.server_name, 0, date_reg];
+        // Format Query
+        sql = mysql.format(sql, insert);
+        // Send Query
+        db.query(sql, function (err, rows, fields) {
+            if (!err)
+                resolve("succesuflly saved on DB");
+            else {
+                rejects("err");
+                console.log(err);
+            }
+            ;
+        });
     });
 };

@@ -44,9 +44,7 @@ db.connect((err) => {
 // CRON Script every 10 minutes
 const cron = new CronJob("*/1 * * * *", () => {
     // MySQL Query
-    let sql = 'SELECT * FROM tickets.tickets WHERE processed = 0;'
-    // Set Up Array Fro
-    let args: string[] = [];
+    let sql = 'SELECT * FROM tickets.tickets WHERE processed = 0;';
     // Execute Query
     db.query(sql, function (err, rows, fields) {
         // Check if Rows length
@@ -60,8 +58,8 @@ const cron = new CronJob("*/1 * * * *", () => {
             const promise: Promise<string> = setup_mail(data);
             // Promise for check mail
             promise
-                .then(() => elaborate(data))
-                .catch(n => console.log(n));                             
+                .then(() => elaborate(data))  // Promise Resolve
+                .catch(n => console.log(n));  // Promise Reject           
         }
     });
 })

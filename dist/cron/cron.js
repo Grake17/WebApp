@@ -62,8 +62,6 @@ db.connect(function (err) {
 var cron = new cron_1.CronJob("*/1 * * * *", function () {
     // MySQL Query
     var sql = 'SELECT * FROM tickets.tickets WHERE processed = 0;';
-    // Set Up Array Fro
-    var args = [];
     // Execute Query
     db.query(sql, function (err, rows, fields) {
         // Check if Rows length
@@ -78,8 +76,8 @@ var cron = new cron_1.CronJob("*/1 * * * *", function () {
             var promise = setup_mail(data);
             // Promise for check mail
             promise
-                .then(function () { return elaborate(data); })
-                .catch(function (n) { return console.log(n); });
+                .then(function () { return elaborate(data); }) // Promise Resolve
+                .catch(function (n) { return console.log(n); }); // Promise Reject           
         };
         for (var _i = 0, rows_1 = rows; _i < rows_1.length; _i++) {
             var i = rows_1[_i];

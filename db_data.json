@@ -1,7 +1,0 @@
-{
-    "host": "server_ip",
-    "database": "database",
-    "username": "db user",
-    "password": "password",
-    "server_name": "Server 01"
-}
