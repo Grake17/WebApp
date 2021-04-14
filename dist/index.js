@@ -35,8 +35,6 @@ var db = mysql.createConnection({
     user: db_data_json_1.username,
     password: db_data_json_1.password
 });
-// Var for result
-var result = [];
 // Connect
 db.connect(function (err) {
     if (err)

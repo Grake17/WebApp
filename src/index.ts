@@ -18,9 +18,6 @@ const db = mysql.createConnection({
     password: password
 });
 
-// Var for result
-var result: string[] = [];
-
 // Connect
 db.connect((err) => {
     if (err) console.log(err);

@@ -19,7 +19,8 @@
     "@types/nodemailer": "^6.4.1"
   },
   "scripts": {
-    "start": "node ./dist/index.js"
+    "start": "node ./dist/index.js",
+    "setup": "node ./dist/setup/setup.js"
   },
   "author": "",
   "license": "ISC"
