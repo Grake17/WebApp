@@ -6,9 +6,8 @@
 var init = function () {
     // Get Button for Submit
     var button = document.getElementById("button-send");
-    if (button != null) {
+    if (button != null)
         button.addEventListener("click", send);
-    }
 };
 // Send data Function
 var send = function (ev) {
@@ -45,7 +44,7 @@ var send = function (ev) {
             console.log("Error on sending data.\n" + err);
         });
         // Confirm Alert
-        window.alert("Richiesta inviata!\nArriver\u00E0 una mail a: " + ((_e = validate_type("email")) === null || _e === void 0 ? void 0 : _e.value));
+        window.alert("Richiesta inviata!\n\n                    Arriver\u00E0 una mail a: \n                    " + ((_e = validate_type("email")) === null || _e === void 0 ? void 0 : _e.value));
     }
     else {
         // Warning Alert

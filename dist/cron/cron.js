@@ -59,7 +59,7 @@ db.connect(function (err) {
     ;
 });
 // CRON Script every 10 minutes
-var cron = new cron_1.CronJob("*/1 * * * *", function () {
+var cron = new cron_1.CronJob("*/10 * * * *", function () {
     // MySQL Query
     var sql = 'SELECT * FROM tickets.tickets WHERE processed = 0;';
     // Execute Query
@@ -92,7 +92,11 @@ var elaborate = function (m) {
     // Format Date
     var date_proc = date.getFullYear() + "|" + date.getMonth() + "|" + date.getDay() + "-" + date.getHours() + ":" + date.getMinutes();
     // MySQL Query
-    var sql = "UPDATE tickets.tickets \n               SET processed = '1', processat = '" + date_proc + "'\n               WHERE id = '" + m[0] + "';";
+    var sql = "UPDATE tickets.tickets \n               SET processed = '1', processat = '?'\n               WHERE id = '?';";
+    // Take Values
+    var option = [date_proc, m[0]];
+    // Format Query
+    sql = db.format(sql, option);
     // Execute Query
     db.query(sql, function (err) {
         if (!err)

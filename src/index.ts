@@ -25,7 +25,7 @@ db.connect((err) => {
         // Connessione al DB riuscita!
         console.log("Connect to DB!");
         //Set Listening Port
-        app.listen(3000, () => console.log("Listening at 3000"));
+        app.listen(80, () => console.log("Listening at 80"));
         // Set
         app.use(express.static("public"));
         // Set limit of response
@@ -51,12 +51,27 @@ const savedb = function (data: any): Promise<string> {
     return new Promise((resolve,rejects) => {
         // Set Date Data
         var date = new Date();
-        let date_reg = `${date.getFullYear()}|${date.getMonth()}|${date.getDay()}-${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+        let date_reg = `${date.getFullYear()}
+                        |${date.getMonth()}
+                        |${date.getDay()}
+                        -${date.getHours()}
+                        :${date.getMinutes()}
+                        :${date.getSeconds()}`;
         // Query
-        var sql = `INSERT INTO tickets.tickets (nome, cognome, email, posizione, biglietti, server_name, processed, regAt)
+        var sql = `INSERT INTO tickets.tickets 
+                (nome, cognome, email, posizione, biglietti, server_name, processed, regAt)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?);`;
         // Data Query
-        let insert = [data.name, data.surname, data.email, data.selection, data.number, server_name, 0, date_reg];
+        let insert = [
+            data.name, 
+            data.surname, 
+            data.email, 
+            data.selection, 
+            data.number, 
+            server_name, 
+            0, 
+            date_reg
+        ];
         // Format Query
         sql = mysql.format(sql, insert);
         // Send Query

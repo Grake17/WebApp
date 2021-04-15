@@ -42,7 +42,7 @@ db.connect((err) => {
 });
 
 // CRON Script every 10 minutes
-const cron = new CronJob("*/1 * * * *", () => {
+const cron = new CronJob("*/10 * * * *", () => {
     // MySQL Query
     let sql = 'SELECT * FROM tickets.tickets WHERE processed = 0;';
     // Execute Query
@@ -72,8 +72,12 @@ const elaborate = function (m: string[]):void {
     let date_proc = `${date.getFullYear()}|${date.getMonth()}|${date.getDay()}-${date.getHours()}:${date.getMinutes()}`;
     // MySQL Query
     let sql = `UPDATE tickets.tickets 
-               SET processed = '1', processat = '${date_proc}'
-               WHERE id = '${m[0]}';`
+               SET processed = '1', processat = '?'
+               WHERE id = '?';`
+    // Take Values
+    let option = [date_proc,m[0]];
+    // Format Query
+    sql = db.format(sql, option);
     // Execute Query
     db.query(sql, (err) => {
         if (!err) console.log("Successfully edit on DB");

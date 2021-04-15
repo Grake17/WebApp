@@ -6,9 +6,7 @@
 const init = function () {
     // Get Button for Submit
     const button = document.getElementById("button-send");
-    if(button != null){
-        button.addEventListener("click", send);
-    }
+    if(button != null) button.addEventListener("click", send);    
 };
 
 // Send data Function
@@ -45,7 +43,10 @@ const send = function (ev: any) {
             console.log(`Error on sending data.\n${err}`);
         });
         // Confirm Alert
-        window.alert(`Richiesta inviata!\nArriverà una mail a: ${validate_type("email")?.value}`);
+        window.alert(`Richiesta inviata!\n
+                    Arriverà una mail a: 
+                    ${validate_type("email")?.value}`
+        );
     } else {
         // Warning Alert
         window.alert(`Attenzione!\nCompilare tutti i campi.`);

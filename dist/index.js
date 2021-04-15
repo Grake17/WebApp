@@ -43,7 +43,7 @@ db.connect(function (err) {
         // Connessione al DB riuscita!
         console.log("Connect to DB!");
         //Set Listening Port
-        app.listen(3000, function () { return console.log("Listening at 3000"); });
+        app.listen(80, function () { return console.log("Listening at 80"); });
         // Set
         app.use(express.static("public"));
         // Set limit of response
@@ -68,11 +68,20 @@ var savedb = function (data) {
     return new Promise(function (resolve, rejects) {
         // Set Date Data
         var date = new Date();
-        var date_reg = date.getFullYear() + "|" + date.getMonth() + "|" + date.getDay() + "-" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        var date_reg = date.getFullYear() + "\n                        |" + date.getMonth() + "\n                        |" + date.getDay() + "\n                        -" + date.getHours() + "\n                        :" + date.getMinutes() + "\n                        :" + date.getSeconds();
         // Query
-        var sql = "INSERT INTO tickets.tickets (nome, cognome, email, posizione, biglietti, server_name, processed, regAt)\n                VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+        var sql = "INSERT INTO tickets.tickets \n                (nome, cognome, email, posizione, biglietti, server_name, processed, regAt)\n                VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
         // Data Query
-        var insert = [data.name, data.surname, data.email, data.selection, data.number, db_data_json_1.server_name, 0, date_reg];
+        var insert = [
+            data.name,
+            data.surname,
+            data.email,
+            data.selection,
+            data.number,
+            db_data_json_1.server_name,
+            0,
+            date_reg
+        ];
         // Format Query
         sql = mysql.format(sql, insert);
         // Send Query
