@@ -4,30 +4,49 @@
 
 // Import Module
 import { CronJob } from "cron";
+// Import Date Formatter
+import moment from "moment";
 
 // Import Email Date
 import * as nodemailer from "nodemailer";
-import { host_mail, user_mail, password_mail } from "../email_cred.json";
+
+// Import .ENV
+import { env_var } from "../env"
+const env = env_var(); 
+
 // Set Cred to mail
 const transporter = nodemailer.createTransport({
-    host: host_mail,
+    host: env.host_mail,
     auth: {
-        user: user_mail,
-        pass: password_mail
-    }
+        user: env.user_mail,
+        pass: env.password_mail
+    },
+    secure: false
 });
+
+// Import Templete (Mail Templete)
+import Email = require("email-templates");
+import path from "path";
+let path_email = path.join(__dirname,"../../emails");
+// Create Templete
+const email = new Email({
+    transport: transporter,
+    send: true,
+    preview: false,
+    views: {
+        root: path.resolve(path_email),      
+    }
+})
 
 // Import DB
 import * as mysql from "mysql";
-// Import DB
-import { host, database, username, password } from "../db_data.json";
 
 // Create connection
 const db = mysql.createConnection({
-    host: host,
-    database: database,
-    user: username,
-    password: password
+    host: env.host_db,
+    database: env.database,
+    user: env.user_db,
+    password: env.password_db
 });
 
 // Connect to DB
@@ -42,7 +61,7 @@ db.connect((err) => {
 });
 
 // CRON Script every 10 minutes
-const cron = new CronJob("*/10 * * * *", () => {
+const cron = new CronJob("*/1 * * * *", () => {
     // MySQL Query
     let sql = 'SELECT * FROM tickets.tickets WHERE processed = 0;';
     // Execute Query
@@ -57,6 +76,7 @@ const cron = new CronJob("*/10 * * * *", () => {
             // Create Promise for mail check
             const promise: Promise<string> = setup_mail(data);
             // Promise for check mail
+            console.log(moment(data[7]).format('YYYY/MM/DD HH:mm:ss'))
             promise
                 .then(() => elaborate(data))  // Promise Resolve
                 .catch(n => console.log(n));  // Promise Reject           
@@ -67,12 +87,10 @@ const cron = new CronJob("*/10 * * * *", () => {
 // Function Update DB
 const elaborate = function (m: string[]):void {
     // Get Date
-    var date = new Date();
-    // Format Date
-    let date_proc = `${date.getFullYear()}|${date.getMonth()}|${date.getDay()}-${date.getHours()}:${date.getMinutes()}`;
+    let date_proc = moment().format('YYYY/MM/DD HH:mm:ss');
     // MySQL Query
     let sql = `UPDATE tickets.tickets 
-               SET processed = '1', processat = '?'
+               SET processed = '1', processat = ?
                WHERE id = '?';`
     // Take Values
     let option = [date_proc,m[0]];
@@ -87,27 +105,31 @@ const elaborate = function (m: string[]):void {
 
 // Function Send Mail
 const setup_mail = function (m: string[]): Promise<string> {
+    // Promise for check error
     return new Promise((resolve, rejects) => {
-        // Set Up Mail Data
-        var mailOptions = {
-            from: user_mail,
-            to: m[3],
-            subject: 'Email di conferma TICKET',
-            text: `Confermiamo con successo che lei ha prenotato\n
-                ${m[5]} biglietti il ${m[7]}`
-        };
-        transporter.sendMail(mailOptions, function (error, info) {
-            // If send mail go wrong
-            if (error){
-                console.log(error); 
-                rejects("err");
-            } 
-            // If send mail works           
-            else {
-                console.log('Email sent: ' + info.response);
-                resolve("yes");
-            }                
-        });     
+        // Send Mail    
+        email.send({
+            template: 'tickets',                // Specify Emails Template
+            locals: {
+                name: m[1],                                         // Name
+                surname: m[2],                                      // Surname
+                email: m[3],                                        // Email used for register 
+                position: m[4],                                     // Stadio Position 
+                number: m[5],                                       // Tickets number
+                data: moment(m[7]).format('YYYY/MM/DD HH:mm:ss')    // Data registration
+            },
+            message: {
+                from: env.user_mail,            // Email Sender
+                to: m[3],                       // Email Reciver
+            },            
+        }).then(() => {
+            // Mail send succesfully
+            console.log(`Email sent to ${m[3]}!`);
+            resolve("yes");
+        }).catch((err) => {
+            // Mail Error
+            rejects(err);
+        });
     });   
 }
 

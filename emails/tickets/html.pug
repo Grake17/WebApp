@@ -1,0 +1,48 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(http-equiv='X-UA-Compatible', content='IE=edge')
+  meta(name='viewport', content='width=device-width, initial-scale=1.0')
+  title Document
+  style.
+    .text_box{
+    border: solid;
+    height: 90px;
+    width: 700px;
+    border-color: blue;
+    position: relative;
+    background-color: lightblue;
+    }
+    .image_background{
+    float: left;
+    height: 90px;
+    width: 200px;
+    background-size: cover;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    }
+    .text_content{
+    font-size: 18px;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    position: absolute;
+    left: 30%;
+    }
+h1  Benvenuto #{surname} #{name} allo Stadio!
+div.text_box
+  img.image_background(src='https://www.ticketone.it/obj/media/IT-eventim/teaser/venue/984x333/2013/san-siro.jpg')
+  p.text_content 
+    | E' stata ricevuta la sua richiesta del #{data} 
+    br
+    | Sono stati prenotati #{number} nel #{position}.
+p
+  br
+  | La ringraziamo della sua partecipazione! 
+  br
+  br
+  | Cordiali Saluti
+  br
+  | La Grande Milano

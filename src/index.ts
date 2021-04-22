@@ -5,17 +5,21 @@
 // Import Module
 import express = require("express");
 const app = express();
+import moment from "moment";
+
+// Import .ENV
+import { env_var } from "./env"
+const env = env_var(); 
 
 // Import DB
 import * as mysql from "mysql";
-import { host, database, username, password, server_name } from "./db_data.json";
 
 // Create connection
 const db = mysql.createConnection({
-    host: host,
-    database: database,
-    user: username,
-    password: password
+    host: env.host_db,
+    database: env.database,
+    user: env.user_db,
+    password: env.password_db
 });
 
 // Connect
@@ -25,8 +29,8 @@ db.connect((err) => {
         // Connessione al DB riuscita!
         console.log("Connect to DB!");
         //Set Listening Port
-        app.listen(80, () => console.log("Listening at 80"));
-        // Set
+        app.listen(3000, () => console.log("Listening at 3000"));
+        // Set public
         app.use(express.static("public"));
         // Set limit of response
         app.use(express.json({ limit: "1mb" }));
@@ -49,14 +53,8 @@ db.connect((err) => {
 // Function DB
 const savedb = function (data: any): Promise<string> {
     return new Promise((resolve,rejects) => {
-        // Set Date Data
-        var date = new Date();
-        let date_reg = `${date.getFullYear()}
-                        |${date.getMonth()}
-                        |${date.getDay()}
-                        -${date.getHours()}
-                        :${date.getMinutes()}
-                        :${date.getSeconds()}`;
+        // Get Date
+        let date_proc = moment().format('YYYY/MM/DD HH:mm:ss');
         // Query
         var sql = `INSERT INTO tickets.tickets 
                 (nome, cognome, email, posizione, biglietti, server_name, processed, regAt)
@@ -68,9 +66,9 @@ const savedb = function (data: any): Promise<string> {
             data.email, 
             data.selection, 
             data.number, 
-            server_name, 
+            env.server_name, 
             0, 
-            date_reg
+            date_proc
         ];
         // Format Query
         sql = mysql.format(sql, insert);

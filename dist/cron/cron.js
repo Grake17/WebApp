@@ -21,9 +21,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 // Import Module
 var cron_1 = require("cron");
+// Import Date Formatter
+var moment_1 = __importDefault(require("moment"));
 // Import Email Date
 var nodemailer = __importStar(require("nodemailer"));
 var email_cred_json_1 = require("../email_cred.json");
@@ -33,6 +38,20 @@ var transporter = nodemailer.createTransport({
     auth: {
         user: email_cred_json_1.user_mail,
         pass: email_cred_json_1.password_mail
+    },
+    secure: false
+});
+// Import Templete (Mail Templete)
+var Email = require("email-templates");
+var path_1 = __importDefault(require("path"));
+var path_email = path_1.default.join(__dirname, "../../emails");
+// Create Templete
+var email = new Email({
+    transport: transporter,
+    send: true,
+    preview: false,
+    views: {
+        root: path_1.default.resolve(path_email),
     }
 });
 // Import DB
@@ -59,7 +78,7 @@ db.connect(function (err) {
     ;
 });
 // CRON Script every 10 minutes
-var cron = new cron_1.CronJob("*/10 * * * *", function () {
+var cron = new cron_1.CronJob("*/1 * * * *", function () {
     // MySQL Query
     var sql = 'SELECT * FROM tickets.tickets WHERE processed = 0;';
     // Execute Query
@@ -75,6 +94,7 @@ var cron = new cron_1.CronJob("*/10 * * * *", function () {
             // Create Promise for mail check
             var promise = setup_mail(data);
             // Promise for check mail
+            console.log(moment_1.default(data[7]).format('YYYY/MM/DD HH:mm:ss'));
             promise
                 .then(function () { return elaborate(data); }) // Promise Resolve
                 .catch(function (n) { return console.log(n); }); // Promise Reject           
@@ -88,11 +108,9 @@ var cron = new cron_1.CronJob("*/10 * * * *", function () {
 // Function Update DB
 var elaborate = function (m) {
     // Get Date
-    var date = new Date();
-    // Format Date
-    var date_proc = date.getFullYear() + "|" + date.getMonth() + "|" + date.getDay() + "-" + date.getHours() + ":" + date.getMinutes();
+    var date_proc = moment_1.default().format('YYYY/MM/DD HH:mm:ss');
     // MySQL Query
-    var sql = "UPDATE tickets.tickets \n               SET processed = '1', processat = '?'\n               WHERE id = '?';";
+    var sql = "UPDATE tickets.tickets \n               SET processed = '1', processat = ?\n               WHERE id = '?';";
     // Take Values
     var option = [date_proc, m[0]];
     // Format Query
@@ -107,25 +125,30 @@ var elaborate = function (m) {
 };
 // Function Send Mail
 var setup_mail = function (m) {
+    // Promise for check error
     return new Promise(function (resolve, rejects) {
-        // Set Up Mail Data
-        var mailOptions = {
-            from: email_cred_json_1.user_mail,
-            to: m[3],
-            subject: 'Email di conferma TICKET',
-            text: "Confermiamo con successo che lei ha prenotato\n\n                " + m[5] + " biglietti il " + m[7]
-        };
-        transporter.sendMail(mailOptions, function (error, info) {
-            // If send mail go wrong
-            if (error) {
-                console.log(error);
-                rejects("err");
-            }
-            // If send mail works           
-            else {
-                console.log('Email sent: ' + info.response);
-                resolve("yes");
-            }
+        // Send Mail    
+        email.send({
+            template: 'tickets',
+            locals: {
+                name: m[1],
+                surname: m[2],
+                email: m[3],
+                position: m[4],
+                number: m[5],
+                data: moment_1.default(m[7]).format('YYYY/MM/DD HH:mm:ss') // Data registration
+            },
+            message: {
+                from: email_cred_json_1.user_mail,
+                to: m[3], // Email Reciver
+            },
+        }).then(function () {
+            // Mail send succesfully
+            console.log("Email sent to " + m[3] + "!");
+            resolve("yes");
+        }).catch(function (err) {
+            // Mail Error
+            rejects(err);
         });
     });
 };

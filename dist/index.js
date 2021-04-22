@@ -21,10 +21,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 // Import Module
 var express = require("express");
 var app = express();
+var moment_1 = __importDefault(require("moment"));
 // Import DB
 var mysql = __importStar(require("mysql"));
 var db_data_json_1 = require("./db_data.json");
@@ -43,7 +47,7 @@ db.connect(function (err) {
         // Connessione al DB riuscita!
         console.log("Connect to DB!");
         //Set Listening Port
-        app.listen(80, function () { return console.log("Listening at 80"); });
+        app.listen(3000, function () { return console.log("Listening at 3000"); });
         // Set
         app.use(express.static("public"));
         // Set limit of response
@@ -66,9 +70,8 @@ db.connect(function (err) {
 // Function DB
 var savedb = function (data) {
     return new Promise(function (resolve, rejects) {
-        // Set Date Data
-        var date = new Date();
-        var date_reg = date.getFullYear() + "\n                        |" + date.getMonth() + "\n                        |" + date.getDay() + "\n                        -" + date.getHours() + "\n                        :" + date.getMinutes() + "\n                        :" + date.getSeconds();
+        // Get Date
+        var date_proc = moment_1.default().format('YYYY/MM/DD HH:mm:ss');
         // Query
         var sql = "INSERT INTO tickets.tickets \n                (nome, cognome, email, posizione, biglietti, server_name, processed, regAt)\n                VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
         // Data Query
@@ -80,7 +83,7 @@ var savedb = function (data) {
             data.number,
             db_data_json_1.server_name,
             0,
-            date_reg
+            date_proc
         ];
         // Format Query
         sql = mysql.format(sql, insert);

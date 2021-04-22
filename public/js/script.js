@@ -6,9 +6,8 @@
 var init = function () {
     // Get Button for Submit
     var button = document.getElementById("button-send");
-    if (button != null) {
+    if (button != null)
         button.addEventListener("click", send);
-    }
 };
 // Send data Function
 var send = function (ev) {
@@ -45,7 +44,7 @@ var send = function (ev) {
             console.log("Error on sending data.\n" + err);
         });
         // Confirm Alert
-        window.alert("Richiesta inviata!\nArriver\u00E0 una mail a: " + ((_e = validate_type("email")) === null || _e === void 0 ? void 0 : _e.value));
+        window.alert("Richiesta inviata!\n\n                    Arriver\u00E0 una mail a: \n                    " + ((_e = validate_type("email")) === null || _e === void 0 ? void 0 : _e.value));
     }
     else {
         // Warning Alert
@@ -83,7 +82,7 @@ var validate = function () {
     check_if_null(name, invalid);
     check_if_null(surname, invalid);
     check_mail(email, invalid);
-    check_if_null(tickets, invalid);
+    check_number(tickets, invalid);
     // Callback
     return invalid;
 };
@@ -97,7 +96,7 @@ var check_if_null = function (x, invalid) {
 };
 // Validate mail
 var check_mail = function (x, invalid) {
-    // Validate fromat
+    // Validate format
     var mailformat = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
     // Check mail 
     if (x == null)
@@ -106,7 +105,13 @@ var check_mail = function (x, invalid) {
         console.log("The Mail is valid");
     }
     else
-        invalid.push("Ivalid mail");
+        invalid.push("Invalid mail");
+};
+// Validate type number
+var check_number = function (x, invalid) {
+    // Check number type
+    if (!Number(x === null || x === void 0 ? void 0 : x.value))
+        invalid.push("Invalid tickets"); // Push Value Error
 };
 // Await page load for addEventListener
 window.addEventListener("load", function () {

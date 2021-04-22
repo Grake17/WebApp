@@ -6,7 +6,7 @@
 const init = function () {
     // Get Button for Submit
     const button = document.getElementById("button-send");
-    if(button != null) button.addEventListener("click", send);    
+    if (button != null) button.addEventListener("click", send);
 };
 
 // Send data Function
@@ -52,7 +52,7 @@ const send = function (ev: any) {
         window.alert(`Attenzione!\nCompilare tutti i campi.`);
     }
     // Delete Entry Function
-    cancel(ev);    
+    cancel(ev);
 };
 
 // Cancel Content Function
@@ -86,30 +86,32 @@ const validate = function () {
     check_if_null(name, invalid);
     check_if_null(surname, invalid);
     check_mail(email, invalid);
-    check_if_null(tickets, invalid);
+    check_number(tickets, invalid);
     // Callback
     return invalid;
 }
 
 // Check value if null
-const check_if_null = function (x: HTMLInputElement | null, invalid: string[]): void {   
+const check_if_null = function (x: HTMLInputElement | null, invalid: string[]): void {
     // Push Empty in Array
-    if(x == null) invalid.push(`Value null`);
-    else if (x.value == "") invalid.push(`Value ${x.name}`);    
+    if (x == null) invalid.push(`Value null`);
+    else if (x.value == "") invalid.push(`Value ${x.name}`);
 }
 
 // Validate mail
 const check_mail = function (x: HTMLInputElement | null, invalid: string[]): void {
-    // Validate fromat
+    // Validate format
     const mailformat = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
     // Check mail 
-    if (x == null)
-        invalid.push("Value null");
-    else if (x.value.match(mailformat)) {
-        console.log("The Mail is valid");
-    }
-    else
-        invalid.push("Ivalid mail");
+    if (x == null) invalid.push("Value null");
+    else if (x.value.match(mailformat)) console.log("The Mail is valid");
+    else invalid.push("Invalid mail");
+};
+
+// Validate type number
+const check_number = function (x: HTMLInputElement | null, invalid: string[]): void {
+    // Check number type
+    if (!Number(x?.value)) invalid.push("Invalid tickets"); // Push Value Error
 };
 
 // Await page load for addEventListener

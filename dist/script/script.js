@@ -82,7 +82,7 @@ var validate = function () {
     check_if_null(name, invalid);
     check_if_null(surname, invalid);
     check_mail(email, invalid);
-    check_if_null(tickets, invalid);
+    check_number(tickets, invalid);
     // Callback
     return invalid;
 };
@@ -96,16 +96,21 @@ var check_if_null = function (x, invalid) {
 };
 // Validate mail
 var check_mail = function (x, invalid) {
-    // Validate fromat
+    // Validate format
     var mailformat = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
     // Check mail 
     if (x == null)
         invalid.push("Value null");
-    else if (x.value.match(mailformat)) {
+    else if (x.value.match(mailformat))
         console.log("The Mail is valid");
-    }
     else
-        invalid.push("Ivalid mail");
+        invalid.push("Invalid mail");
+};
+// Validate type number
+var check_number = function (x, invalid) {
+    // Check number type
+    if (!Number(x === null || x === void 0 ? void 0 : x.value))
+        invalid.push("Invalid tickets"); // Push Value Error
 };
 // Await page load for addEventListener
 window.addEventListener("load", function () {

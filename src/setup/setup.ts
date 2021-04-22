@@ -9,7 +9,10 @@ import path from "path";
 
 // Import DB
 import * as mysql from "mysql";
-import { host, database, username, password, server_name } from "../db_data.json";
+
+// Import .ENV
+import { env_var } from "../env"
+const env = env_var(); 
 
 // Function file set up
 const file_promise = async function (): Promise<string> {
@@ -33,10 +36,10 @@ const db_promise = async function (): Promise<string> {
     return new Promise<string>((resolve, reject) => {
         // Create connection
         const db = mysql.createConnection({
-            host: host,
-            database: database,
-            user: username,
-            password: password
+            host: env.host_db,
+            database: env.database,
+            user: env.user_db,
+            password: env.password_db
         });
         // Connect to DB
         db.connect((err) => {
