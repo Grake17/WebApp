@@ -4,3 +4,6 @@
 # JSON
 db_data.json
 email_cred.json
+
+#.Env
+*.env
