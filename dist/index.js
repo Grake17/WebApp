@@ -29,15 +29,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express = require("express");
 var app = express();
 var moment_1 = __importDefault(require("moment"));
+// Import .ENV
+var env_1 = require("./env");
+var env = env_1.env_var();
 // Import DB
 var mysql = __importStar(require("mysql"));
-var db_data_json_1 = require("./db_data.json");
 // Create connection
 var db = mysql.createConnection({
-    host: db_data_json_1.host,
-    database: db_data_json_1.database,
-    user: db_data_json_1.username,
-    password: db_data_json_1.password
+    host: env.host_db,
+    database: env.database,
+    user: env.user_db,
+    password: env.password_db
 });
 // Connect
 db.connect(function (err) {
@@ -48,7 +50,7 @@ db.connect(function (err) {
         console.log("Connect to DB!");
         //Set Listening Port
         app.listen(3000, function () { return console.log("Listening at 3000"); });
-        // Set
+        // Set public
         app.use(express.static("public"));
         // Set limit of response
         app.use(express.json({ limit: "1mb" }));
@@ -81,7 +83,7 @@ var savedb = function (data) {
             data.email,
             data.selection,
             data.number,
-            db_data_json_1.server_name,
+            env.server_name,
             0,
             date_proc
         ];

@@ -67,7 +67,9 @@ var fs = __importStar(require("fs"));
 var path_1 = __importDefault(require("path"));
 // Import DB
 var mysql = __importStar(require("mysql"));
-var db_data_json_1 = require("../db_data.json");
+// Import .ENV
+var env_1 = require("../env");
+var env = env_1.env_var();
 // Function file set up
 var file_promise = function () {
     return __awaiter(this, void 0, void 0, function () {
@@ -96,10 +98,10 @@ var db_promise = function () {
             return [2 /*return*/, new Promise(function (resolve, reject) {
                     // Create connection
                     var db = mysql.createConnection({
-                        host: db_data_json_1.host,
-                        database: db_data_json_1.database,
-                        user: db_data_json_1.username,
-                        password: db_data_json_1.password
+                        host: env.host_db,
+                        database: env.database,
+                        user: env.user_db,
+                        password: env.password_db
                     });
                     // Connect to DB
                     db.connect(function (err) {

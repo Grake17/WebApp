@@ -31,13 +31,15 @@ var cron_1 = require("cron");
 var moment_1 = __importDefault(require("moment"));
 // Import Email Date
 var nodemailer = __importStar(require("nodemailer"));
-var email_cred_json_1 = require("../email_cred.json");
+// Import .ENV
+var env_1 = require("../env");
+var env = env_1.env_var();
 // Set Cred to mail
 var transporter = nodemailer.createTransport({
-    host: email_cred_json_1.host_mail,
+    host: env.host_mail,
     auth: {
-        user: email_cred_json_1.user_mail,
-        pass: email_cred_json_1.password_mail
+        user: env.user_mail,
+        pass: env.password_mail
     },
     secure: false
 });
@@ -56,14 +58,12 @@ var email = new Email({
 });
 // Import DB
 var mysql = __importStar(require("mysql"));
-// Import DB
-var db_data_json_1 = require("../db_data.json");
 // Create connection
 var db = mysql.createConnection({
-    host: db_data_json_1.host,
-    database: db_data_json_1.database,
-    user: db_data_json_1.username,
-    password: db_data_json_1.password
+    host: env.host_db,
+    database: env.database,
+    user: env.user_db,
+    password: env.password_db
 });
 // Connect to DB
 db.connect(function (err) {
@@ -139,7 +139,7 @@ var setup_mail = function (m) {
                 data: moment_1.default(m[7]).format('YYYY/MM/DD HH:mm:ss') // Data registration
             },
             message: {
-                from: email_cred_json_1.user_mail,
+                from: env.user_mail,
                 to: m[3], // Email Reciver
             },
         }).then(function () {
